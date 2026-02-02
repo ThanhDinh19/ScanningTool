@@ -38,7 +38,7 @@ export default function IndexPage() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch("http://localhost:5000/api/excel/preview", {
+    const res = await fetch("http://10.0.0.236:5000/api/excel/preview", {
       method: "POST",
       body: formData,
     });
@@ -79,7 +79,7 @@ export default function IndexPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/excel/reset", {
+      const res = await fetch("http://10.0.0.236:5000/api/excel/reset", {
         method: "POST",
       });
 
