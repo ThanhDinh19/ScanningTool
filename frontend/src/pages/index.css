@@ -1,0 +1,277 @@
+/* index.css */
+
+:root {
+  --primary-color: #217346; /* Màu xanh đặc trưng của Excel */
+  --primary-hover: #1a5c38;
+  --bg-color: #f4f7f6;
+  --text-color: #333;
+  --border-color: #ddd;
+  --white: #ffffff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.title {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.tab {
+  padding: 10px 24px;
+  border: none;
+  background: #dee0e2;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.tab:hover {
+  background-color: #e8f5e9;
+  color: var(--primary-color);
+}
+
+.tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* IMPORT BOX */
+.import-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.file-input {
+  padding: 10px;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.file-input:hover {
+  border-color: var(--primary-color);
+}
+
+.sheet-select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  width: 200px;
+}
+
+/* TABLE STYLES */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  min-width: 600px;
+}
+
+th {
+  background-color: #f8f9fa;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid var(--border-color);
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+tr:hover {
+  background-color: #f1f8f4;
+}
+
+/* LOADING & MESSAGES */
+.loading {
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: bold;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+  .tabs {
+    flex-direction: column;
+  }
+}
+
+
+/* ===== GRAND TOTAL HEADER ===== */
+.grand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.export-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background: #15803d;
+}
+
+
+.grand-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.reset-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #dc2626;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay {
+  position: fixed;          /* BẮT BUỘC */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;            /* RẤT QUAN TRỌNG */
+}
+
+/* ===== MODAL BOX ===== */
+.modal {
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 10px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== MODAL TEXT ===== */
+.modal h3 {
+  margin: 0 0 12px;
+}
+
+.modal p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.modal-warning {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ===== MODAL ACTIONS ===== */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-cancel {
+  padding: 8px 14px;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #d1d5db;
+}
+
+.btn-danger {
+  padding: 8px 14px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+
