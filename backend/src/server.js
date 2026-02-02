@@ -5,6 +5,6 @@ const PORT = 5000;
 
 resetGrandTotalExcel();
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(5000, "0.0.0.0", () => {
+  console.log("Server running on 0.0.0.0:5000");
 });
