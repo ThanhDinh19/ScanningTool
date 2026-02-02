@@ -1,0 +1,26 @@
+====== Hướng dẫn chạy Backend =====
+    Bước 1: Mở terminal và vào thư mục backend
+    cd backend
+
+    Bước 2: Cài thư viện cần thiết
+    npm install
+
+    Bước 3: Chạy backend
+    npm start
+
+    👉 Backend sẽ chạy tại: http://localhost:5000
+
+
+
+====== Hướng dẫn chạy Frontend (local) ======
+    Bước 1: Mở terminal mới và vào thư mục frontend
+    cd frontend
+
+    Bước 2: Cài thư viện
+    npm install
+
+    Bước 3: Chạy frontend
+    npm start
+
+    👉 Truy cập trình duyệt: http://localhost:3000
+
