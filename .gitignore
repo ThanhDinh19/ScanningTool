@@ -1,11 +1,4 @@
-# node_modules
 node_modules/
-
-# frontend build
-frontend/build/
-
-# env
 .env
-
-# logs
+frontend/build/
 npm-debug.log*
