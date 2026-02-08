@@ -88,7 +88,7 @@ export default function IndexPage() {
       // sau khi import xong → reload Grand Total
       await loadData();
 
-      alert("Import Excel thành công & Grand Total đã được cập nhật");
+      // alert("Import Excel thành công & Grand Total đã được cập nhật");
     } catch (err) {
       console.error(err);
       alert("Import Excel thất bại");
@@ -167,7 +167,7 @@ export default function IndexPage() {
 
   return (
     <div className="container">
-      <h2 className="title">Scanning Tool</h2>
+      <h2 className="title">SCANNING TOOL</h2>
 
       {/* TAB BUTTONS */}
       <div className="tabs">
@@ -178,12 +178,12 @@ export default function IndexPage() {
           📊 Grand Total
         </button>
 
-        <button
+        {/* <button
           className={tab === "import" ? "tab active" : "tab"}
           onClick={() => setTab("import")}
         >
           🔍 Import & Scan
-        </button>
+        </button> */}
 
         <button
           className={tab === "guide" ? "tab active" : "tab"}
@@ -276,56 +276,71 @@ export default function IndexPage() {
       {tab === "guide" && (
         <div className="guide">
           <h3>📘 Hướng dẫn sử dụng Scanning Tool</h3>
-          <ol>
-            <li>
-              <b>🔍 Import & Scan</b>
-              <p>
-                Chọn file Excel (<code>.xls</code> hoặc <code>.xlsx</code>) để hệ thống
-                tự động quét các chỉ số cần thiết.
-              </p>
-              <p>
-                Sau khi upload, dữ liệu sẽ được xử lý và tổng hợp tự động.
-              </p>
-            </li>
 
+          <ol>
             <li>
               <b>📊 Grand Total</b>
               <p>
-                Sau khi quá trình import & scan hoàn tất, tab <b>Grand Total</b> sẽ được
-                cập nhật với dữ liệu mới nhất.
+                Tab <b>Grand Total</b> là nơi hiển thị toàn bộ dữ liệu đã được tổng hợp từ
+                các file Excel đã import.
               </p>
               <p>
-                Người dùng có thể xem bảng dữ liệu tổng hợp và thực hiện xuất báo cáo.
+                Tại đây, bạn có thể xem bảng dữ liệu tổng hợp và theo dõi các chỉ
+                số quan trọng.
               </p>
             </li>
 
             <li>
-              <b>📤 Xuất Excel</b>
+              <b>📥 Import Excel</b>
               <p>
-                Tại tab <b>Grand Total</b>, nhấn nút <b>Export Excel</b> để tải dữ liệu
-                tổng hợp ra file Excel.
+                Trong tab <b>Grand Total</b>, nhấn nút <b>Import Excel</b> để chọn file Excel
+                (<code>.xls</code> hoặc <code>.xlsx</code>) cần xử lý.
               </p>
               <p>
-                File xuất ra phục vụ cho việc báo cáo, lưu trữ hoặc chia sẻ dữ liệu.
+                Hệ thống sẽ tự động quét, xử lý dữ liệu và cập nhật vào bảng
+                <b> Grand Total</b> sau khi import hoàn tất.
+              </p>
+            </li>
+
+            <li>
+              <b>📤 Export Excel</b>
+              <p>
+                Sau khi dữ liệu đã được cập nhật, nhấn nút <b>Export Excel</b> để tải toàn
+                bộ dữ liệu Grand Total ra file Excel.
+              </p>
+              <p>
+                File xuất ra dùng cho việc báo cáo, lưu trữ hoặc chia sẻ dữ liệu.
+              </p>
+            </li>
+
+            <li>
+              <b>🔄 Reset dữ liệu</b>
+              <p>
+                Nhấn nút <b>Reset Excel</b> để xoá toàn bộ dữ liệu hiện có trong
+                <b> Grand Total</b>.
+              </p>
+              <p>
+                Hệ thống sẽ yêu cầu xác nhận trước khi thực hiện. Dữ liệu sau khi reset
+                <b> không thể khôi phục</b>.
               </p>
             </li>
 
             <li>
               <b>🔎 Kiểm tra dữ liệu</b>
               <p>
-                Kiểm tra các chỉ số đã được quét và dữ liệu trong file Excel xuất ra
-                để đảm bảo độ chính xác trước khi sử dụng cho báo cáo chính thức.
+                Kiểm tra lại các chỉ số và dữ liệu trong bảng Grand Total để đảm bảo độ
+                chính xác trước khi sử dụng cho báo cáo chính thức.
               </p>
             </li>
           </ol>
 
           <div className="guide-note">
-            ⚠️ <b>Lưu ý:</b> Mỗi lần import sẽ <b>tự động cập nhật</b> dữ liệu trong
-            Grand Total. Chức năng Export chỉ xuất dữ liệu đang hiển thị.
+            ⚠️ <b>Lưu ý:</b> Mỗi lần import Excel sẽ <b>tự động cập nhật</b> dữ liệu trong
+            Grand Total. Chức năng Export chỉ xuất dữ liệu đang hiển thị tại thời điểm
+            xuất.
           </div>
         </div>
       )}
-
 
       {showResetConfirm && (
         <div className="modal-overlay">

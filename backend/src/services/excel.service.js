@@ -417,7 +417,7 @@ const EXCEL_TEMPLATES = [
     type: "INNOVATION",
     requiredHeaders: [
       "STYLE",
-      "PO. No.",
+      "PO. NO.",
       "COLOUR",
       "CTNS.",
       "TOTAL QTY.",
@@ -2283,7 +2283,7 @@ function previewHENRI_BULK(workbook) {
 // innovation
 const INNOVATION = [
   "STYLE",
-  "PO. No.",
+  "PO. NO.",
   "COLOUR",
   "CTNS.",
   "TOTAL QTY.",
@@ -2444,8 +2444,6 @@ function previewINNOVATION(workbook) {
     // 4️ build cellMatrix cho sheet này
     const columnCells = extractColumnCellArrays(rowCleaned, sheetName);
     cellMatrix.push(...columnCells);
-
-    removeEmptySpacerRowsByTitle_INPLACE(cellMatrix, "DESCRIPTION");
 
     // ===================== TÍNH TOÁN =====================
 
