@@ -11,7 +11,6 @@ import {
 import { resetGrandTotalExcel } from "../utils/math.util.js";
 
 
-
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
@@ -26,13 +25,14 @@ const GRAND_TOTAL_PATH = path.join(
 function buildGrandTotalRows(summary) {
   const rows = [];
 
-  Object.values(summary).forEach(item => {
-    const colors   = Array.isArray(item.color)   ? item.color   : [item.color];
+  summary.forEach(item => {
+    const colors = Array.isArray(item.color) ? item.color : [item.color];
     const articles = Array.isArray(item.article) ? item.article : [item.article];
-    const pos      = Array.isArray(item.po)      ? item.po      : [item.po];
+    const posRaw = Array.isArray(item.po) ? item.po : [item.po];
+    const pos = posRaw.filter(v => String(v || "").trim() !== "");
 
     // =========================
-    // CASE 1️: article ↔ color ↔ po tương ứng 1–1–1
+    // CASE 1: style ↔ color ↔ po (1–1–1)
     // =========================
     if (
       articles.length === colors.length &&
@@ -40,40 +40,60 @@ function buildGrandTotalRows(summary) {
       articles.length > 1
     ) {
       articles.forEach((article, idx) => {
-        rows.push({
-          SHEET: item.sheetName,
-          "ARTICLE / STYLE": article,
-          PO: pos[idx],
-          COLOR: colors[idx],
-          COUNT: item.countTotal,
-          TOTAL: item.total,
-          NET: item.net,
-          GROSS: item.gross,
-          "VOLUME (CBM)": Number(item.volume.toFixed(3)),
-          "CARTON DIMENSION (CM)": item.cartonFormula,
-        });
+        rows.push(buildRow(item, article, colors[idx], pos[idx]));
       });
       return;
     }
 
     // =========================
-    // CASE 2️ + 3️ + 4️: không tương ứng → cross logic
+    // CASE 2: style ↔ color (1–1) + PO đơn
+    // =========================
+    if (
+      articles.length === colors.length &&
+      articles.length > 1 &&
+      pos.length === 1
+    ) {
+      articles.forEach((article, idx) => {
+        rows.push(buildRow(item, article, colors[idx], pos[0]));
+      });
+      return;
+    }
+
+    // =========================
+    // CASE 3: style ↔ color (1–1), không có PO
+    // =========================
+    if (
+      articles.length === colors.length &&
+      articles.length > 1 &&
+      pos.length === 0
+    ) {
+      articles.forEach((article, idx) => {
+        rows.push(buildRow(item, article, colors[idx], ""));
+      });
+      return;
+    }
+
+    // =========================
+    // CASE X: color là mảng, style & PO đơn
+    // =========================
+    if (
+      articles.length === 1 &&
+      colors.length > 1 &&
+      pos.length === 1
+    ) {
+      colors.forEach(color => {
+        rows.push(buildRow(item, articles[0], color, pos[0]));
+      });
+      return;
+    }
+
+    // =========================
+    // CASE 4: fallback cross (chỉ khi thật sự cần)
     // =========================
     articles.forEach(article => {
       colors.forEach(color => {
         pos.forEach(po => {
-          rows.push({
-            SHEET: item.sheetName,
-            "ARTICLE / STYLE": article,
-            PO: po,
-            COLOR: color,
-            COUNT: item.countTotal,
-            TOTAL: item.total,
-            NET: item.net,
-            GROSS: item.gross,
-            "VOLUME (CBM)": Number(item.volume.toFixed(3)),
-            "CARTON DIMENSION (CM)": item.cartonFormula,
-          });
+          rows.push(buildRow(item, article, color, po));
         });
       });
     });
@@ -81,6 +101,23 @@ function buildGrandTotalRows(summary) {
 
   return rows;
 }
+// >>> hãy thêm một case chỉ có color là mảng, po đơn, và style đơn
+
+function buildRow(item, article, color, po) {
+  return {
+    SHEET: item.sheetName,
+    "ARTICLE / STYLE": article,
+    PO: po,
+    COLOR: color,
+    COUNT: item.countTotal,
+    TOTAL: item.total,
+    NET: item.net,
+    GROSS: item.gross,
+    "VOLUME (CBM)": Number(item.volume.toFixed(3)),
+    "CARTON DIMENSION (CM)": item.cartonFormula,
+  };
+}
+
 
 function writeGrandTotalExcel(summary) {
   const rows = buildGrandTotalRows(summary);
@@ -112,7 +149,6 @@ function writeGrandTotalExcel(summary) {
     worksheet = xlsx.utils.json_to_sheet(rows);
     xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
   }
-
   xlsx.writeFile(workbook, GRAND_TOTAL_PATH);
 }
 
@@ -144,7 +180,6 @@ router.post("/excel/preview", upload.single("file"), (req, res) => {
 router.post('/excel/reset', (req, res) => {
   resetGrandTotalExcel();
 })
-
 
 
 export default router;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getData } from "../services/data.service";
+import { getData, resetData, importExcel } from "../services/data.service";
+import { ArrowUp } from "lucide-react";
 import './index.css'
 import * as XLSX from "xlsx";
 
@@ -15,6 +16,24 @@ export default function IndexPage() {
   const [currentSheet, setCurrentSheet] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
 
   // load DATA tab
   useEffect(() => {
@@ -35,25 +54,50 @@ export default function IndexPage() {
 
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("file", file);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    const res = await fetch("http://10.0.0.236:5000/api/excel/preview", {
-      method: "POST",
-      body: formData,
-    });
+      const result = await importExcel(formData);
 
-    const result = await res.json();
+      setSheetNames(result.sheetNames || []);
+      setSheetData(result.data || {});
 
-    setSheetNames(result.sheetNames || []);
-    setSheetData(result.data || {});
-
-    if (result.sheetNames?.length > 0) {
-      setCurrentSheet(result.sheetNames[0]);
+      if (result.sheetNames?.length > 0) {
+        setCurrentSheet(result.sheetNames[0]);
+      }
+    } catch (err) {
+      console.error("Import excel error:", err);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
+  const handleImportInGrandTotal = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const result = await importExcel(formData);
+
+      // sau khi import xong → reload Grand Total
+      await loadData();
+
+      alert("Import Excel thành công & Grand Total đã được cập nhật");
+    } catch (err) {
+      console.error(err);
+      alert("Import Excel thất bại");
+    } finally {
+      setLoading(false);
+      e.target.value = ""; // reset input để chọn lại file
+    }
+  };
+
 
   const handleExportExcel = () => {
     if (!dataRows || dataRows.length === 0) {
@@ -71,21 +115,25 @@ export default function IndexPage() {
   };
 
   const handlResetExcel = () => {
+    setTab("data");
     setShowResetConfirm(true);
   };
 
   const confirmResetExcel = async () => {
     setShowResetConfirm(false);
+    setTab("data");
+    setDataRows([]);
     setLoading(true);
 
     try {
-      const res = await fetch("http://10.0.0.236:5000/api/excel/reset", {
-        method: "POST",
-      });
-
+      // const res = await fetch("http://10.0.0.236:5000/api/excel/reset", {
+      //   method: "POST",
+      // });
+      const res = await resetData();
       if (!res.ok) throw new Error("Reset failed");
 
       await loadData();
+
       alert("Đã reset dữ liệu Grand Total");
     } catch (err) {
       alert("Reset thất bại, vui lòng thử lại");
@@ -93,7 +141,6 @@ export default function IndexPage() {
       setLoading(false);
     }
   };
-
 
 
   const renderTable = (rows) => (
@@ -146,22 +193,25 @@ export default function IndexPage() {
         </button>
       </div>
 
-      {loading && <p className="loading">Loading...</p>}
+      {/* {loading && <p className="loading">Loading...</p>} */}
 
       {/* TAB 1 */}
-      {tab === "data" && !loading && (
+      {tab === "data" && (
         <div>
           <div className="grand-header">
             <h3>📊 Grand Total</h3>
 
             <div className="grand-actions">
-              <button
-                className="reset-btn"
-                onClick={handlResetExcel}
-                disabled={dataRows.length === 0}
-              >
-                🔄 Reset Excel
-              </button>
+
+              <label className="import-btn">
+                📥 Import Excel
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  hidden
+                  onChange={handleImportInGrandTotal}
+                />
+              </label>
 
               <button
                 className="export-btn"
@@ -171,11 +221,23 @@ export default function IndexPage() {
                 ⬇ Export Excel
               </button>
 
+              <button
+                className="reset-btn"
+                onClick={handlResetExcel}
+                disabled={dataRows.length === 0}
+              >
+                🔄 Reset Excel
+              </button>
+
             </div>
           </div>
 
           <div className="table-wrapper">
-            {renderTable(dataRows)}
+            {dataRows.length === 0 ? (
+              <p className="empty">📭 Chưa có dữ liệu Grand Total</p>
+            ) : (
+              renderTable(dataRows)
+            )}
           </div>
         </div>
       )}
@@ -273,9 +335,9 @@ export default function IndexPage() {
             <p>
               Bạn có chắc chắn muốn <b>reset toàn bộ dữ liệu Grand Total</b> không?
             </p>
-            <p className="modal-warning">
+            {/* <p className="modal-warning">
               Hành động này không thể hoàn tác.
-            </p>
+            </p> */}
 
             <div className="modal-actions">
               <button
@@ -294,6 +356,16 @@ export default function IndexPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showScrollTop && (
+        <button
+          className="scroll-top-btn"
+          onClick={scrollToTop}
+          title="Lên đầu trang"
+        >
+          <ArrowUp size={22} strokeWidth={2.5} />
+        </button>
       )}
     </div>
   );

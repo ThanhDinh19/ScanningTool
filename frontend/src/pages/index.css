@@ -19,7 +19,7 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   background: var(--white);
   padding: 30px;
@@ -274,4 +274,86 @@ button:disabled {
   background: #b91c1c;
 }
 
+
+.import-btn {
+  background: #4caf50;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.import-btn:hover {
+  background: #43a047;
+}
+
+
+/* Table wrapper */
+.table-wrapper {
+  width: 100%;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+/* Empty state */
+.empty {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  background: #fafafa;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+}
+
+/* Optional icon style (emoji) */
+.empty::before {
+  content: "📊";
+  display: block;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+/* Loading text */
+.loading {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #007bff;
+}
+
+
+/* Scroll to top button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  border: none;
+  background: #34373999;;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.scroll-top-btn:hover {
+  background: #00b35789;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Active */
+.scroll-top-btn:active {
+  transform: translateX(-50%) scale(0.95);
+}
 
